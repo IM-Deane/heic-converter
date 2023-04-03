@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import siteConfig from "site.config";
 
 export default function Document() {
 	return (
@@ -24,7 +25,7 @@ export default function Document() {
 				<link
 					rel="manifest"
 					href="/manifest.json"
-					crossOrigin="use-cblueentials"
+					crossOrigin="use-credentials"
 				/>
 				<link
 					rel="mask-icon"
@@ -33,6 +34,7 @@ export default function Document() {
 				/>
 				<meta name="msapplication-TileColor" content="#da532c" />
 				<meta name="theme-color" content="#ffffff" />
+				<meta name="description" content={siteConfig.description} />
 			</Head>
 			<body className="h-full overflow-hidden">
 				<Main />

@@ -12,8 +12,9 @@ export default siteConfig({
 	developer: "Alchemized Software Ltd.",
 	contactEmail: "hello@alchemizedsoftware.com",
 
-	description: "A really good HEIF(.heic) and HEVC media transform.",
+	slogan: "SwiftConvert: Free, fast, and flawless HEIC conversions",
+	description:
+		"SwiftConvert is the free and fast solution for converting HEIC photos to JPEGs without sacrificing quality. Our tool ensures flawless and lightning-speed conversions, so you can easily share your photos without any hassle. Try SwiftConvert today and experience the convenience of hassle-free photo conversions.",
 
-	// main navigation tabs
 	mainNavTabs: [{ name: "Photos", href: "/", icon: PhotoIcon, current: true }],
 });

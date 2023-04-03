@@ -22,6 +22,7 @@ export interface SiteConfig {
 	developer: string;
 	productBrand: string;
 	contactEmail: string;
+	slogan?: string;
 	description?: string;
 
 	mainNavTabs: MainNavTab[];

@@ -1,0 +1,37 @@
+{
+	"name": "SwiftConvert",
+	"short_name": "SwiftConvert",
+	"description": "SwiftConvert: Free, fast, and flawless HEIC conversions",
+	"id": "./",
+	"start_url": "./",
+	"icons": [
+		{
+			"src": "/favicon/favicon.ico",
+			"type": "image/png",
+			"sizes": "48x48"
+		},
+		{
+			"src": "/favicon/favicon-16x16.png",
+			"type": "image/png",
+			"sizes": "16x16"
+		},
+		{
+			"src": "/favicon/favicon-32x32.png",
+			"type": "image/png",
+			"sizes": "32x32"
+		},
+		{
+			"src": "/favicon/android-chrome-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon/android-chrome-384x384.png",
+			"sizes": "384x384",
+			"type": "image/png"
+		}
+	],
+	"theme_color": "#ffffff",
+	"background_color": "#ffffff",
+	"display": "standalone"
+}
