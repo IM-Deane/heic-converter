@@ -10,6 +10,6 @@ import (
 
 func main() {
     http.HandleFunc("/", handlers.Health)
-    http.HandleFunc("/convert", handlers.ConvertImage)
+    http.HandleFunc("/api/convert", handlers.ConvertImage)
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
