@@ -5,13 +5,14 @@ import Dropzone from "react-dropzone";
 import UploadService from "@/services/upload-service";
 
 import LoadingButton from "./LoadingButton";
-import SelectInput, { Input } from "./SelectInput";
-import { FileType } from "@/types/index";
+import SelectInput from "./SelectInput";
+import { FileType, fileTypes } from "@/types/index";
+import { useSettingsContext } from "@/context/SettingsProvider";
 
-const fileTypes: Input[] = [
-	{ id: "jpeg", name: ".JPEG" },
-	{ id: "png", name: ".PNG" },
-];
+// const fileTypes: Input[] = [
+// 	{ id: "jpeg", name: ".JPEG" },
+// 	{ id: "png", name: ".PNG" },
+// ];
 
 function FileUploader({ handleResult }) {
 	const [showProgressBar, setShowProgressBar] = useState(false);
@@ -21,9 +22,7 @@ function FileUploader({ handleResult }) {
 	const [transcribeProgress, setTranscribeProgress] = useState<number>(1);
 	const [completionTime, setCompletionTime] = useState<number>(0);
 
-	const [convertToFileType, setConvertToFileType] = useState<Input>(
-		fileTypes[0]
-	);
+	const { settings } = useSettingsContext();
 
 	const handleSubmit = async () => {
 		if (!selectedFiles) return;
@@ -58,12 +57,12 @@ function FileUploader({ handleResult }) {
 		try {
 			const response = await UploadService.newImage(
 				fileData,
-				convertToFileType.id as FileType,
+				FileType[settings.fileOutputId],
 				uploadProgress
 			);
 
 			setCompletionTime(response.data.completionTime);
-			handleResult(response.data, fileData, convertToFileType.id as FileType);
+			handleResult(response.data, fileData);
 		} catch (error) {
 			if (error.response) {
 				// response with status code other than 2xx
@@ -160,14 +159,6 @@ function FileUploader({ handleResult }) {
 				</div>
 				<div className="shadow sm:overflow-hidden sm:rounded-md">
 					<div className="space-y-6 bg-white px-4 py-5 sm:p-6">
-						<div className="mb-4 pb-4 w-1/6 text-left">
-							<SelectInput
-								inputLabel="Convert to:"
-								inputList={fileTypes}
-								selectedInput={convertToFileType}
-								handleSelectedInput={setConvertToFileType}
-							/>
-						</div>
 						<div>
 							<Dropzone onDrop={handleFileDrop} multiple={false}>
 								{({ getRootProps, getInputProps }) => (
