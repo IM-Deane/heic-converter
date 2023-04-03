@@ -1,29 +1,38 @@
 import Head from "next/head";
 import { useState } from "react";
 
+import prettyBytes from "pretty-bytes";
+
 import Layout from "@/components/Layout";
 import FileUploader from "@/components/FileUploader";
-
-const defaultPhoto = {
-	name: "IMG_4985.HEIC",
-	size: "3.9 MB",
-	source:
-		"https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80",
-	information: {
-		"Uploaded by": "Marie Culver",
-		Created: "June 8, 2020",
-		"Last modified": "June 8, 2020",
-		Dimensions: "4032 x 3024",
-		Resolution: "72 x 72",
-	},
-};
+import { FileType } from "@/types/index";
 
 export default function UploadFile() {
 	const [currentFile, setCurrentFile] = useState<any>();
 
-	const handleResult = () => {
-		console.log("uplaoded");
+	const handleResult = (
+		convertedImage: ArrayBuffer,
+		previousImage: File,
+		fileType: FileType
+	) => {
+		const filename = previousImage.name.replace(/\.[^/.]+$/, `.${fileType}`);
+		const newImage = new File([convertedImage], filename, {
+			type: `image/${fileType}`,
+		});
+		const imageURL = URL.createObjectURL(newImage);
+
+		setCurrentFile({
+			name: filename,
+			size: prettyBytes(newImage.size),
+			source: imageURL,
+			information: {
+				Created: new Date(newImage.lastModified).toDateString(),
+				"Last modified": new Date(newImage.lastModified).toDateString(),
+			},
+		});
 	};
+
+	console.log("current file", currentFile);
 
 	return (
 		<>
@@ -43,30 +52,23 @@ export default function UploadFile() {
 									Transform .HEIC
 								</h1>
 							</div>
-
-							{/* Gallery */}
 							<section className="mt-2 pb-16" aria-labelledby="gallery-heading">
 								<h2 id="gallery-heading" className="sr-only">
 									New .HEIC photo
 								</h2>
-								<FileUploader
-									currentFile={currentFile}
-									setCurrentFile={setCurrentFile}
-									handleResult={handleResult}
-								/>
+								<FileUploader handleResult={handleResult} />
 							</section>
 						</div>
 					</main>
-
 					{/* Details sidebar */}
-					{/* {currentFile && (
-						<aside className="w-96 overflow-y-auto border-l border-gray-200 bg-white p-8 lg:block">
-							<div className="space-y-6 pb-12">
+					{currentFile && (
+						<aside className="w-96 h-screen overflow-y-auto border-l border-gray-200 bg-white p-8 lg:block">
+							<div className="space-y-6 pb-12 h-96">
 								<div>
 									<div className="aspect-h-7 aspect-w-10 block w-full overflow-hidden rounded-lg">
 										<img
 											src={currentFile.source}
-											alt=""
+											alt={currentFile.name}
 											className="object-cover"
 										/>
 									</div>
@@ -77,7 +79,7 @@ export default function UploadFile() {
 												{currentFile.name}
 											</h2>
 											<p className="text-sm font-medium text-gray-500">
-												{currentFile?.size}
+												{currentFile.size}
 											</p>
 										</div>
 									</div>
@@ -98,9 +100,27 @@ export default function UploadFile() {
 										))}
 									</dl>
 								</div>
+								<div className="flex gap-x-3">
+									<a
+										type="button"
+										download={currentFile.name}
+										href={currentFile.source}
+										title={currentFile.name}
+										className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm text-center font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+									>
+										Download
+									</a>
+									<button
+										type="button"
+										onClick={() => setCurrentFile(undefined)}
+										className="flex-1 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+									>
+										Delete
+									</button>
+								</div>
 							</div>
 						</aside>
-					)} */}
+					)}
 				</div>
 			</Layout>
 		</>

@@ -26,8 +26,8 @@ class UploadService {
 			params: {
 				format: convertToFormat,
 			},
-			responseType: "json",
-			onUploadProgress, // track upload progress for audio file (not conversion progress)
+			responseType: "blob",
+			onUploadProgress,
 		});
 	};
 }

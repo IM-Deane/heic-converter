@@ -11,10 +11,10 @@ import { FileType } from "@/types/index";
 const fileTypes: Input[] = [
 	{ id: "jpeg", name: ".JPEG" },
 	{ id: "png", name: ".PNG" },
-	// { id: 'heic', name: ".HEIC" },
 ];
 
-function FileUploader({ currentFile, setCurrentFile, handleResult }) {
+function FileUploader({ handleResult }) {
+	const [showProgressBar, setShowProgressBar] = useState(false);
 	const [selectedFiles, setSelectedFiles] = useState<any>(undefined);
 	const [loading, setLoading] = useState(false);
 	const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -32,7 +32,7 @@ function FileUploader({ currentFile, setCurrentFile, handleResult }) {
 		const currentFileData = selectedFiles[0]; // get first uploaded file
 
 		setUploadProgress(0);
-		setCurrentFile(currentFileData);
+		setShowProgressBar(true);
 
 		await uploadFileToServer(
 			currentFileData,
@@ -42,44 +42,6 @@ function FileUploader({ currentFile, setCurrentFile, handleResult }) {
 					Math.round((100 * fileUploadEvent.loaded) / fileUploadEvent.total)
 				)
 		);
-
-		// establish SSE connection
-		// const eventSrc = new EventSource(
-		// 	`${process.env.NEXT_PUBLIC_SSE_URL}/api/events/progress`
-		// );
-
-		// let guidValue = null; // ID for server event emitter
-
-		// // listen for initial client ID event
-		// eventSrc.addEventListener("GUID", (event) => {
-		// 	guidValue = event.data;
-
-		// 	// listen for progress updates for this client
-		// 	eventSrc.addEventListener(guidValue, (event) => {
-		// 		const { progress } = JSON.parse(event.data);
-
-		// 		if (transcribeProgress !== progress) {
-		// 			setTranscribeProgress(progress); // update progress
-		// 		}
-		// 		if (progress === 100) {
-		// 			setTranscribeProgress(progress);
-		// 			eventSrc.close(); // transcription complete
-		// 		}
-		// 	});
-
-		// });
-
-		// eventSrc.onerror = (event) => {
-		// 	console.log("An error occurred while attempting to connect.", event);
-
-		// 	eventSrc.close();
-		// 	setTranscribeProgress(1);
-		// };
-
-		// if (transcribeProgress === 100) {
-		// 	// stop listening for server events
-		// 	eventSrc.close();
-		// }
 	};
 
 	/**
@@ -92,7 +54,6 @@ function FileUploader({ currentFile, setCurrentFile, handleResult }) {
 		uploadProgress: (fileUploadEvent) => void
 	) => {
 		setLoading(true);
-		console.log(fileData);
 
 		try {
 			const response = await UploadService.newImage(
@@ -100,10 +61,9 @@ function FileUploader({ currentFile, setCurrentFile, handleResult }) {
 				convertToFileType.id as FileType,
 				uploadProgress
 			);
-			console.log(response);
 
 			setCompletionTime(response.data.completionTime);
-			handleResult(response.data);
+			handleResult(response.data, fileData, convertToFileType.id as FileType);
 		} catch (error) {
 			if (error.response) {
 				// response with status code other than 2xx
@@ -122,11 +82,10 @@ function FileUploader({ currentFile, setCurrentFile, handleResult }) {
 			// reset state
 			setUploadProgress(0);
 			setTranscribeProgress(1);
-			setCurrentFile(undefined);
 		} finally {
 			setLoading(false);
 			setSelectedFiles(undefined);
-			setCurrentFile(undefined);
+			setShowProgressBar(false);
 		}
 	};
 
@@ -153,7 +112,7 @@ function FileUploader({ currentFile, setCurrentFile, handleResult }) {
 			<div className="mt-5 md:col-span-2 md:mt-0">
 				{/* Progress bar */}
 				<div className="my-6 py-5">
-					{currentFile && (
+					{showProgressBar && (
 						<div className="min-h-24">
 							<h4 className="sr-only">Status</h4>
 							<p className="text-sm font-medium text-gray-900">
@@ -264,7 +223,6 @@ function FileUploader({ currentFile, setCurrentFile, handleResult }) {
 							</Dropzone>
 						</div>
 					</div>
-
 					<div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
 						{completionTime ? (
 							<span className="mt-2 mr-8 text-sm text-indigo-500">
