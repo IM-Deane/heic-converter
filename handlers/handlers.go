@@ -39,18 +39,14 @@ func ConvertImage(w http.ResponseWriter, r *http.Request) {
     if (*r).Method == "OPTIONS" {
         return
    } else if (*r).Method == http.MethodPost {
-        fmt.Printf("got / convert request: \n")
-
         // for now we support png and jpeg
         convertToPng := r.URL.Query().Get("format") == "png"
 
-        file, _, err := r.FormFile("image")
+        file, _, err := r.FormFile("file")
         if err != nil {
             http.Error(w, "Missing image file", http.StatusBadRequest)
             return
         }
-
-        fmt.Printf("got / file: \n")
 
         defer file.Close()
 
@@ -64,6 +60,7 @@ func ConvertImage(w http.ResponseWriter, r *http.Request) {
 
         switch contentType {
         case "image/heic":
+        case "application/octet-stream":
             var imgBytes []byte
             var imgContentType string
             var err error
@@ -74,7 +71,6 @@ func ConvertImage(w http.ResponseWriter, r *http.Request) {
             } else {
                 imgBytes, err = util.ToJpeg(imageBytes)
                 imgContentType = "image/jpeg"
-                fmt.Printf("got / converted image to jpeg: \n")
             }
 
             if err != nil {

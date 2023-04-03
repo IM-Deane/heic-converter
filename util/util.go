@@ -19,6 +19,7 @@ func ToJpeg(imageBytes []byte) ([]byte, error) {
 
     switch contentType {
     case "image/heic":
+    case "application/octet-stream":
         img, err := goheif.Decode(bytes.NewReader(imageBytes))
         if err != nil {
             return nil, errors.Wrap(err, "unable to decode heic")
