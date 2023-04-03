@@ -1,22 +1,18 @@
 import { Fragment, useState } from "react";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import { Dialog, Transition } from "@headlessui/react";
-import {
-	Bars3BottomLeftIcon,
-	PhotoIcon,
-	XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/20/solid";
 
+import siteConfig from "site.config";
 import SettingsModal from "@/components/SettingsModal";
 import { classNames } from "@/utils/index";
 import { useRouter } from "next/router";
 
-const navigation = [
-	{ name: "Photos", href: "/", icon: PhotoIcon, current: true },
-];
+const navigation = siteConfig.mainNavTabs;
 
 export default function Layout({ children }) {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,14 +31,16 @@ export default function Layout({ children }) {
 	return (
 		<div className="flex">
 			{/* Narrow sidebar */}
-			<div className="hidden h-screen w-28 overflow-y-auto bg-gray-700 md:block">
+			<div className="hidden h-screen w-28 overflow-y-auto bg-gray-900 md:block">
 				<div className="flex w-full flex-col items-center py-6">
 					<div className="flex flex-shrink-0 items-center">
-						<img
-							className="h-8 w-auto"
-							src="https://tailwindui.com/img/logos/mark.svg?color=white"
-							alt="Your Company"
-						/>
+						<div className="relative h-16 w-16">
+							<Image
+								src={siteConfig.productBrand}
+								alt={`${siteConfig.siteName} logo`}
+								fill
+							/>
+						</div>
 					</div>
 					<div className="mt-6 w-full flex-1 space-y-1 px-2">
 						{navigation.map((item) => (
@@ -52,7 +50,7 @@ export default function Layout({ children }) {
 								className={classNames(
 									item.current
 										? "bg-gray-800 text-white"
-										: "text-red-100 hover:bg-red-800 hover:text-white",
+										: "text-blue-100 hover:bg-blue-800 hover:text-white",
 									"group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium"
 								)}
 								aria-current={item.current ? "page" : undefined}
@@ -61,7 +59,7 @@ export default function Layout({ children }) {
 									className={classNames(
 										item.current
 											? "text-white"
-											: "text-red-300 group-hover:text-white",
+											: "text-blue-300 group-hover:text-white",
 										"h-6 w-6"
 									)}
 									aria-hidden="true"
@@ -102,7 +100,7 @@ export default function Layout({ children }) {
 							leaveFrom="translate-x-0"
 							leaveTo="-translate-x-full"
 						>
-							<Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-red-700 pb-4 pt-5">
+							<Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-blue-700 pb-4 pt-5">
 								<Transition.Child
 									as={Fragment}
 									enter="ease-in-out duration-300"
@@ -143,7 +141,7 @@ export default function Layout({ children }) {
 													className={classNames(
 														item.current
 															? "bg-gray-800 text-white"
-															: "text-red-100 hover:bg-red-800 hover:text-white",
+															: "text-blue-100 hover:bg-blue-800 hover:text-white",
 														"group flex items-center rounded-md py-2 px-3 text-sm font-medium"
 													)}
 													aria-current={item.current ? "page" : undefined}
@@ -152,7 +150,7 @@ export default function Layout({ children }) {
 														className={classNames(
 															item.current
 																? "text-white"
-																: "text-red-300 group-hover:text-white",
+																: "text-blue-300 group-hover:text-white",
 															"mr-3 h-6 w-6"
 														)}
 														aria-hidden="true"
@@ -178,7 +176,7 @@ export default function Layout({ children }) {
 					<div className="relative z-10 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white shadow-sm">
 						<button
 							type="button"
-							className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 md:hidden"
+							className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden"
 							onClick={() => setMobileMenuOpen(true)}
 						>
 							<span className="sr-only">Open sidebar</span>
@@ -189,7 +187,7 @@ export default function Layout({ children }) {
 								<button
 									type="button"
 									onClick={() => setSettingsModalOpen(true)}
-									className="rounded-full bg-red-600 p-1.5 text-white hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+									className="rounded-full bg-blue-600 p-1.5 text-white hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
 								>
 									<AdjustmentsHorizontalIcon
 										className="h-5 w-5"

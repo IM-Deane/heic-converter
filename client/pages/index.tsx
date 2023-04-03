@@ -51,12 +51,12 @@ export default function Home() {
 									Convert your photos
 								</h1>
 								<p className="mt-2 max-w-4xl text-sm text-gray-500">
-									Upload <span className="text-red-500">.heic</span> images from
-									your library and watch them transform before your eyes!
+									Upload <span className="text-blue-500">.heic</span> images
+									from your library and watch them transform before your eyes!
 								</p>
 								<p className="mt-2 max-w-4xl text-sm text-gray-500">
 									Currently supported output formats:{" "}
-									<span className="text-red-500">.png | .jpeg</span>
+									<span className="text-blue-500">.png | .jpeg</span>
 								</p>
 							</div>
 							<section className="mt-2 pb-16" aria-labelledby="main-heading">
@@ -113,7 +113,7 @@ export default function Home() {
 										download={currentFile.name}
 										href={currentFile.source}
 										title={currentFile.name}
-										className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm text-center font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+										className="flex-1 rounded-md bg-blue-600 px-3 py-2 text-sm text-center font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
 									>
 										Download
 									</a>

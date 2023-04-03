@@ -114,31 +114,31 @@ function FileUploader({ handleResult }) {
 								{/* upload segment */}
 								<div className="overflow-hidden rounded-full bg-gray-200">
 									<div
-										className="h-2 rounded-full bg-red-600"
+										className="h-2 rounded-full bg-blue-600"
 										style={{
 											width: `${getTotalProgress()}%`,
 										}}
 									/>
 								</div>
 								<div className="mt-6 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
-									<div className="text-red-600">Uploading photo</div>
+									<div className="text-blue-600">Uploading photo</div>
 									<div
 										className={`text-center ${
-											uploadProgress === 100 ? "text-red-600" : ""
+											uploadProgress === 100 ? "text-blue-600" : ""
 										}`}
 									>
 										Converting photo
 									</div>
 									<div
 										className={`text-center ${
-											transcribeProgress >= 50 ? "text-red-600" : ""
+											transcribeProgress >= 50 ? "text-blue-600" : ""
 										}`}
 									>
 										Saving changes
 									</div>
 									<div
 										className={`text-right ${
-											transcribeProgress === 100 ? "text-red-600" : ""
+											transcribeProgress === 100 ? "text-blue-600" : ""
 										}`}
 									>
 										Completed
@@ -159,7 +159,7 @@ function FileUploader({ handleResult }) {
 									>
 										{/* Show uploaded file  */}
 										{selectedFiles && selectedFiles[0].name ? (
-											<p className="rounded-md bg-white font-medium text-red-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-red-500 focus-within:ring-offset-2 hover:text-red-500">
+											<p className="rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500">
 												{selectedFiles && selectedFiles[0].name}
 											</p>
 										) : (
@@ -181,7 +181,7 @@ function FileUploader({ handleResult }) {
 												<div className="flex text-sm text-gray-600">
 													<label
 														htmlFor="audio-file"
-														className="relative cursor-pointer rounded-md bg-white font-medium text-red-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-red-500 focus-within:ring-offset-2 hover:text-red-500"
+														className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
 													>
 														<span>Upload photo</span>
 														<input
@@ -207,7 +207,7 @@ function FileUploader({ handleResult }) {
 					</div>
 					<div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
 						{completionTime ? (
-							<span className="mt-2 mr-8 text-sm text-red-500">
+							<span className="mt-2 mr-8 text-sm text-blue-500">
 								Completed transcription in <strong>{completionTime}</strong>
 							</span>
 						) : (

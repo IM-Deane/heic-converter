@@ -26,7 +26,7 @@ function Alert({ title, message, type, isOpen = false }: AlertProps) {
 
 			case "error":
 				return (
-					<XMarkIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+					<XMarkIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />
 				);
 			default:
 				return null;
