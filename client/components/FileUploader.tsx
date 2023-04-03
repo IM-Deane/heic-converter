@@ -5,14 +5,8 @@ import Dropzone from "react-dropzone";
 import UploadService from "@/services/upload-service";
 
 import LoadingButton from "./LoadingButton";
-import SelectInput from "./SelectInput";
-import { FileType, fileTypes } from "@/types/index";
+import { FileType } from "@/types/index";
 import { useSettingsContext } from "@/context/SettingsProvider";
-
-// const fileTypes: Input[] = [
-// 	{ id: "jpeg", name: ".JPEG" },
-// 	{ id: "png", name: ".PNG" },
-// ];
 
 function FileUploader({ handleResult }) {
 	const [showProgressBar, setShowProgressBar] = useState(false);
@@ -33,13 +27,10 @@ function FileUploader({ handleResult }) {
 		setUploadProgress(0);
 		setShowProgressBar(true);
 
-		await uploadFileToServer(
-			currentFileData,
-			// calculate progress for file upload
-			(fileUploadEvent) =>
-				setUploadProgress(
-					Math.round((100 * fileUploadEvent.loaded) / fileUploadEvent.total)
-				)
+		await uploadFileToServer(currentFileData, (fileUploadEvent) =>
+			setUploadProgress(
+				Math.round((100 * fileUploadEvent.loaded) / fileUploadEvent.total)
+			)
 		);
 	};
 
@@ -123,31 +114,31 @@ function FileUploader({ handleResult }) {
 								{/* upload segment */}
 								<div className="overflow-hidden rounded-full bg-gray-200">
 									<div
-										className="h-2 rounded-full bg-indigo-600"
+										className="h-2 rounded-full bg-red-600"
 										style={{
 											width: `${getTotalProgress()}%`,
 										}}
 									/>
 								</div>
 								<div className="mt-6 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
-									<div className="text-indigo-600">Uploading photo</div>
+									<div className="text-red-600">Uploading photo</div>
 									<div
 										className={`text-center ${
-											uploadProgress === 100 ? "text-indigo-600" : ""
+											uploadProgress === 100 ? "text-red-600" : ""
 										}`}
 									>
 										Converting photo
 									</div>
 									<div
 										className={`text-center ${
-											transcribeProgress >= 50 ? "text-indigo-600" : ""
+											transcribeProgress >= 50 ? "text-red-600" : ""
 										}`}
 									>
 										Saving changes
 									</div>
 									<div
 										className={`text-right ${
-											transcribeProgress === 100 ? "text-indigo-600" : ""
+											transcribeProgress === 100 ? "text-red-600" : ""
 										}`}
 									>
 										Completed
@@ -168,7 +159,7 @@ function FileUploader({ handleResult }) {
 									>
 										{/* Show uploaded file  */}
 										{selectedFiles && selectedFiles[0].name ? (
-											<p className="rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500">
+											<p className="rounded-md bg-white font-medium text-red-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-red-500 focus-within:ring-offset-2 hover:text-red-500">
 												{selectedFiles && selectedFiles[0].name}
 											</p>
 										) : (
@@ -190,7 +181,7 @@ function FileUploader({ handleResult }) {
 												<div className="flex text-sm text-gray-600">
 													<label
 														htmlFor="audio-file"
-														className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+														className="relative cursor-pointer rounded-md bg-white font-medium text-red-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-red-500 focus-within:ring-offset-2 hover:text-red-500"
 													>
 														<span>Upload photo</span>
 														<input
@@ -216,7 +207,7 @@ function FileUploader({ handleResult }) {
 					</div>
 					<div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
 						{completionTime ? (
-							<span className="mt-2 mr-8 text-sm text-indigo-500">
+							<span className="mt-2 mr-8 text-sm text-red-500">
 								Completed transcription in <strong>{completionTime}</strong>
 							</span>
 						) : (

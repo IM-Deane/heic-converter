@@ -35,7 +35,7 @@ export default function Layout({ children }) {
 	return (
 		<div className="flex">
 			{/* Narrow sidebar */}
-			<div className="hidden h-screen w-28 overflow-y-auto bg-indigo-700 md:block">
+			<div className="hidden h-screen w-28 overflow-y-auto bg-gray-700 md:block">
 				<div className="flex w-full flex-col items-center py-6">
 					<div className="flex flex-shrink-0 items-center">
 						<img
@@ -51,8 +51,8 @@ export default function Layout({ children }) {
 								href={item.href}
 								className={classNames(
 									item.current
-										? "bg-indigo-800 text-white"
-										: "text-indigo-100 hover:bg-indigo-800 hover:text-white",
+										? "bg-gray-800 text-white"
+										: "text-red-100 hover:bg-red-800 hover:text-white",
 									"group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium"
 								)}
 								aria-current={item.current ? "page" : undefined}
@@ -61,7 +61,7 @@ export default function Layout({ children }) {
 									className={classNames(
 										item.current
 											? "text-white"
-											: "text-indigo-300 group-hover:text-white",
+											: "text-red-300 group-hover:text-white",
 										"h-6 w-6"
 									)}
 									aria-hidden="true"
@@ -102,7 +102,7 @@ export default function Layout({ children }) {
 							leaveFrom="translate-x-0"
 							leaveTo="-translate-x-full"
 						>
-							<Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-indigo-700 pb-4 pt-5">
+							<Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-red-700 pb-4 pt-5">
 								<Transition.Child
 									as={Fragment}
 									enter="ease-in-out duration-300"
@@ -142,8 +142,8 @@ export default function Layout({ children }) {
 													href={item.href}
 													className={classNames(
 														item.current
-															? "bg-indigo-800 text-white"
-															: "text-indigo-100 hover:bg-indigo-800 hover:text-white",
+															? "bg-gray-800 text-white"
+															: "text-red-100 hover:bg-red-800 hover:text-white",
 														"group flex items-center rounded-md py-2 px-3 text-sm font-medium"
 													)}
 													aria-current={item.current ? "page" : undefined}
@@ -152,7 +152,7 @@ export default function Layout({ children }) {
 														className={classNames(
 															item.current
 																? "text-white"
-																: "text-indigo-300 group-hover:text-white",
+																: "text-red-300 group-hover:text-white",
 															"mr-3 h-6 w-6"
 														)}
 														aria-hidden="true"
@@ -178,7 +178,7 @@ export default function Layout({ children }) {
 					<div className="relative z-10 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white shadow-sm">
 						<button
 							type="button"
-							className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+							className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 md:hidden"
 							onClick={() => setMobileMenuOpen(true)}
 						>
 							<span className="sr-only">Open sidebar</span>
@@ -189,7 +189,7 @@ export default function Layout({ children }) {
 								<button
 									type="button"
 									onClick={() => setSettingsModalOpen(true)}
-									className="rounded-full bg-indigo-600 p-1.5 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+									className="rounded-full bg-red-600 p-1.5 text-white hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
 								>
 									<AdjustmentsHorizontalIcon
 										className="h-5 w-5"
