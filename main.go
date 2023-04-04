@@ -8,12 +8,24 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	ConfigRuntime()
 	StartGin()
 }
+
+func envVariable(key string) string {
+  err := godotenv.Load(".env")
+
+  if err != nil {
+    log.Fatalf("Error loading .env file")
+  }
+
+  return os.Getenv(key)
+}
+
 
 // ConfigRuntime sets the number of operating system threads.
 func ConfigRuntime() {
@@ -24,13 +36,16 @@ func ConfigRuntime() {
 // StartGin starts gin web server with setting router.
 func StartGin() {
 	gin.SetMode(gin.ReleaseMode)
+	envVariable("ENV")
 
 	router := gin.Default()
 	config := cors.DefaultConfig()
-	// TODO: enable CORS for swiftconvert.io or whatever when released
-	config.AllowAllOrigins = true
-  	// config.AllowOrigins = []string{"http://localhost:3000"}
-
+	if envVariable("ENV") == "production" {
+		config.AllowOrigins = []string{envVariable("CLIENT_ORIGIN")}
+	} else {
+		config.AllowAllOrigins = true
+	}
+  	
   	router.Use(cors.New(config))
 	router.Static("/static", "resources/static")
 
@@ -39,7 +54,7 @@ func StartGin() {
   	router.MaxMultipartMemory = 5 << 20  // 5 MiB
 	router.POST("/api/convert", ConvertImagePOST)
 
-	port := os.Getenv("PORT")
+	port := envVariable("PORT") 
 	if port == "" {
 		port = "8080"
 	}
