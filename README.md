@@ -15,6 +15,12 @@ Run the following command to start the server on 8080
 go run .
 ```
 
+Build the project using:
+
+```bash
+go build -tags netgo -ldflags '-s -w' -o app
+```
+
 ### Prod build example:
 
 https://www.callicoder.com/docker-golang-image-container-example/
