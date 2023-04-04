@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,6 +38,7 @@ func ConvertImagePOST(c *gin.Context) {
         return
     }
 
+	startTime := time.Now()
     contentType := http.DetectContentType(imageBytes)
 
     switch contentType {
@@ -62,6 +64,8 @@ func ConvertImagePOST(c *gin.Context) {
             return
         }
 
+		elapsedTime := time.Since(startTime)
+		c.Writer.Header().Set("Server-Timing", elapsedTime.String())
 		c.Data(http.StatusOK, imgContentType, imgBytes)
 
     default:

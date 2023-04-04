@@ -40,6 +40,7 @@ func StartGin() {
 
 	router := gin.Default()
 	config := cors.DefaultConfig()
+	config.ExposeHeaders = []string{"Server-Timing"}
 	if envVariable("ENV") == "production" {
 		config.AllowOrigins = []string{envVariable("CLIENT_ORIGIN")}
 	} else {
