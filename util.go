@@ -10,7 +10,6 @@ import (
 
 	"github.com/adrium/goheif"
 	"github.com/pkg/errors"
-	// "github.com/gin-gonic/gin"
 )
 
 
@@ -56,18 +55,3 @@ func ToPng(imageBytes []byte) ([]byte, error) {
 
     return nil, fmt.Errorf("unable to convert %#v to png", contentType)
 }
-
-// func rateLimit(c *gin.Context) {
-// 	ip := c.ClientIP()
-// 	value := int(c.ips.Add(ip, 1))
-// 	if value%50 == 0 {
-// 		fmt.Printf("ip: %s, count: %d\n", ip, value)
-// 	}
-// 	if value >= 200 {
-// 		if value%200 == 0 {
-// 			fmt.Println("ip blocked")
-// 		}
-// 		c.Abort()
-// 		c.String(http.StatusServiceUnavailable, "you were automatically banned :)")
-// 	}
-// }

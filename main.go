@@ -32,7 +32,6 @@ func StartGin() {
   	// config.AllowOrigins = []string{"http://localhost:3000"}
 
   	router.Use(cors.New(config))
-	// router.Use(rateLimit, gin.Recovery()) TODO: API rate limiter
 	router.Static("/static", "resources/static")
 
 	router.GET("/", index)
