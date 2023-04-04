@@ -63,8 +63,8 @@ func ConvertImagePOST(c *gin.Context) {
 			})
             return
         }
-
-		elapsedTime := time.Since(startTime)
+        // round to 10 milliseconds (two decimal places)
+		elapsedTime := time.Since(startTime).Truncate(time.Millisecond * 10)
 		c.Writer.Header().Set("Server-Timing", elapsedTime.String())
 		c.Data(http.StatusOK, imgContentType, imgBytes)
 
