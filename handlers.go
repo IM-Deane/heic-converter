@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -29,7 +29,7 @@ func ConvertImagePOST(c *gin.Context) {
         return
     }
 
-    imageBytes, err := ioutil.ReadAll(file)
+    imageBytes, err := io.ReadAll(file)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",

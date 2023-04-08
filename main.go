@@ -48,7 +48,6 @@ func StartGin() {
 	}
   	
   	router.Use(cors.New(config))
-	router.Static("/static", "resources/static")
 
 	router.GET("/", index)
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
