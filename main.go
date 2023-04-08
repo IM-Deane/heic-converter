@@ -52,7 +52,7 @@ func StartGin() {
 	router.GET("/", index)
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
   	router.MaxMultipartMemory = 5 << 20  // 5 MiB
-	router.POST("/api/convert", ConvertImagePOST)
+	router.POST("/api/convert", ConvertPOSTSSE)
 
 	port := envVariable("PORT") 
 	if port == "" {
