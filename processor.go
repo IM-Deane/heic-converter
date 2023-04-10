@@ -14,60 +14,28 @@ import (
 
 	"github.com/adrium/goheif"
 	"github.com/h2non/bimg"
-	"github.com/pkg/errors"
+	"github.com/rwcarlsen/goexif/exif"
 )
 
-
-
-func ToJpeg(imageBytes []byte) ([]byte, error) {
-    contentType := http.DetectContentType(imageBytes)
-
-    switch contentType {
-    case "image/heic":
-    case "application/octet-stream":
-        img, err := goheif.Decode(bytes.NewReader(imageBytes))
-        if err != nil {
-            return nil, errors.Wrap(err, "unable to decode heic")
-        }
-
-        buf := new(bytes.Buffer)
-        if err := jpeg.Encode(buf, img, nil); err != nil {
-            return nil, errors.Wrap(err, "unable to encode jpeg")
-        }
-        return buf.Bytes(), nil
-    }
-
-    return nil, fmt.Errorf("unable to convert %#v to jpeg", contentType)
-}
-
-func ToPng(imageBytes []byte) ([]byte, error) {
-    contentType := http.DetectContentType(imageBytes)
-
-    switch contentType {
-    case "image/heic":
-    case "application/octet-stream":
-        img, err := goheif.Decode(bytes.NewReader(imageBytes))
-        if err != nil {
-            return nil, errors.Wrap(err, "unable to decode heic")
-        }
-
-        buf := new(bytes.Buffer)
-        if err := png.Encode(buf, img); err != nil {
-            return nil, errors.Wrap(err, "unable to encode png")
-        }
-        return buf.Bytes(), nil
-    }
-
-    return nil, fmt.Errorf("unable to convert %#v to png", contentType)
-}
-
-
 func processHEICImage(imageBytes []byte) (image.Image, error) {
-	img, err := goheif.Decode(bytes.NewReader(imageBytes))
+	reader := bytes.NewReader(imageBytes)
+
+	heifImg, err := goheif.Decode(reader)
 	if err != nil {
 		return nil, err
 	}
-	return img, nil
+
+	// Extract EXIF data and image orientation
+	exifData, _ := exif.Decode(reader)
+	if exifData != nil {
+		orientationVal, err := exifData.Get(exif.Orientation)
+		
+		if err == nil && orientationVal != nil {
+			orientation, _ := orientationVal.Int(0)
+			heifImg = applyOrientation(heifImg, orientation) // keep OG image orientation
+		}
+	}
+	return heifImg, nil
 }
 
 func processNonHEICImage(imageBytes []byte) (image.Image, error) {
@@ -172,30 +140,43 @@ func processImage(
 	}
 }
 
+func applyOrientation(img image.Image, orientation int) image.Image {
+	bimgOptions := bimg.Options{}
+
+	switch orientation {
+	case 2:
+		bimgOptions.Flip = true
+	case 3:
+		bimgOptions.Rotate = 180
+	case 4:
+		bimgOptions.Rotate = 180
+		bimgOptions.Flip = true
+	case 5:
+		bimgOptions.Rotate = 270
+		bimgOptions.Flip = true
+	case 6:
+		bimgOptions.Rotate = 270
+	case 7:
+		bimgOptions.Rotate = 90
+		bimgOptions.Flip = true
+	case 8:
+		bimgOptions.Rotate = 90
+	}
+
+	if orientation > 1 {
+		bimgBuf, _ := bimg.NewImage(imageToBytes(img)).Process(bimgOptions)
+		img, _, _ = image.Decode(bytes.NewReader(bimgBuf))
+	}
+
+	return img
+}
+
+func imageToBytes(img image.Image) []byte {
+	var buf bytes.Buffer
+	_ = jpeg.Encode(&buf, img, nil)
+	return buf.Bytes()
+}
+
 func removeFileExtension(filename string) string {
     return filename[0 : len(filename)-len(filepath.Ext(filename))]
-}
-
-func updateProgress(fileId string, progress int) {
-	progressMutex.Lock()
-	defer progressMutex.Unlock()
-	progressMap[fileId] = progress
-}
-
-func addClient(fileId string, client chan string) {
-	progressMutex.Lock()
-	defer progressMutex.Unlock()
-	progressMap[fileId] = 0
-	go func() {
-		for progress := range progressMap {
-			client <- fmt.Sprintf("fileId: %s, progress: %s%%", fileId, progress)
-		}
-	}()
-}
-
-func removeClient(fileId string, client chan string) {
-	progressMutex.Lock()
-	defer progressMutex.Unlock()
-	delete(progressMap, fileId)
-	close(client)
 }
