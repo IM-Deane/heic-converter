@@ -13,6 +13,7 @@ import (
 )
 
 var progressMap = make(map[string]int)
+var progressChannels = make(map[string]chan int)
 var progressMutex sync.Mutex
 
 type UploadProgress struct {

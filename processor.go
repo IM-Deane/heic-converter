@@ -48,7 +48,7 @@ func processNonHEICImage(imageBytes []byte) (image.Image, error) {
 
 func processImage(
 	file *multipart.FileHeader,
-	convertToPng bool,
+	convertToFormat string,
 	fileId string) ImageResult {
 	src, err := file.Open()
 	if err != nil {
@@ -59,7 +59,7 @@ func processImage(
 	}
 	defer src.Close()
 
-	progressMap[fileId] = 10
+	updateProgress(fileId, 10)
 
 	imageBytes, err := io.ReadAll(src)
 	if err != nil {
@@ -69,7 +69,7 @@ func processImage(
 		}
 	}
 
-	progressMap[fileId] = 20
+	updateProgress(fileId, 20)
 
 	contentType := http.DetectContentType(imageBytes)
 
@@ -81,7 +81,7 @@ func processImage(
 		img, err = processNonHEICImage(imageBytes)
 	}
 
-	progressMap[fileId] = 50
+	updateProgress(fileId, 50)
 
 	if err != nil {
 		return ImageResult{
@@ -92,12 +92,13 @@ func processImage(
 
 	// Encode image.Image into a byte slice
 	var buf bytes.Buffer
-	if convertToPng {
+	if convertToFormat == "png" {
 		err = png.Encode(&buf, img)
 	} else {
 		err = jpeg.Encode(&buf, img, nil)
 	}
-	progressMap[fileId] = 80
+
+	updateProgress(fileId, 80)
 
 	if err != nil {
 		return ImageResult{
@@ -110,7 +111,7 @@ func processImage(
 
 	// Create options for the output image format
 	var outputOptions bimg.Options
-	if convertToPng {
+	if  convertToFormat == "png" {
 		outputOptions = bimg.Options{Type: bimg.PNG}
 	} else {
 		outputOptions = bimg.Options{Type: bimg.JPEG}
@@ -125,14 +126,19 @@ func processImage(
 		}
 	}
 
+	updateProgress(fileId, 90)
+
 	filename := removeFileExtension(file.Filename)
-	if convertToPng {
+
+	fmt.Println("Convert to PNG: %s", convertToFormat)
+
+	if  convertToFormat == "png" {
 		filename = fmt.Sprintf("%s.png", filename)
     } else {
 		filename = fmt.Sprintf("%s.jpeg", filename)
 	}
 
-	progressMap[fileId] = 100
+	updateProgress(fileId, 100)
 
 	return ImageResult{
 		Filename: filename,

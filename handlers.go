@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	"io"
 	"net/http"
 	"time"
 
@@ -25,23 +24,43 @@ type ImageResult struct {
 func EventProgressGET(c *gin.Context) {
 	fileId := c.Query("fileId")
 
-	if fileId == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing fileId parameter"})
-		return
-	}
+    c.Header("Content-Type", "text/event-stream")
+    c.Header("Cache-Control", "no-cache")
+    c.Header("Connection", "keep-alive")
+    c.Header("Access-Control-Allow-Origin", "*")
 
-	channel := make(chan string)
-	addClient(fileId, channel)
-	defer removeClient(fileId, channel)
+    // Create a new channel to receive updates
+    updateChan := make(chan int)
+    defer close(updateChan)
 
-	c.Stream(func(w io.Writer) bool {
-		c.SSEvent("message", <-channel)
-		return true
-	})
+    // Register the channel with the fileId
+    progressMutex.Lock()
+    progressChannels[fileId] = updateChan
+    progressMutex.Unlock()
+
+    // Unregister the channel when the function exits
+    defer func() {
+        progressMutex.Lock()
+        delete(progressChannels, fileId)
+        progressMutex.Unlock()
+    }()
+
+    for {
+        select {
+        case progress, ok := <-updateChan:
+            if !ok {
+                return
+            }
+            c.SSEvent("message", progress) // emit progress event
+            c.Writer.Flush()
+        case <-c.Request.Context().Done():
+            return
+        }
+    }
 }
 
 func convertImagePOST(c *gin.Context) {
-	convertToPng := c.DefaultPostForm("convertToPng", "false") == "true"
+	convertToPng := c.DefaultPostForm("convertToFormat", "jpeg")
 	files := c.Request.MultipartForm.File["images"]
 	fileIds := c.PostFormArray("fileIds")
 
