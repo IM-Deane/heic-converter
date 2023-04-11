@@ -84,7 +84,6 @@ func StartGin() {
   	router.Use(cors.New(config))
 
 	// Serve static files for the client
-	router.StaticFile("/", "./client/index.html")
 	router.GET("/health", HealthCheck)
 
 	// SSE route to receive progress updates
