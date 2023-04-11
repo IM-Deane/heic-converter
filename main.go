@@ -16,34 +16,6 @@ var progressMap = make(map[string]int)
 var progressChannels = make(map[string]chan int)
 var progressMutex sync.Mutex
 
-type UploadProgress struct {
-	clients  map[chan string]bool
-	mu       sync.Mutex
-	Progress int
-}
-
-func (up *UploadProgress) AddClient(client chan string) {
-	up.mu.Lock()
-	defer up.mu.Unlock()
-	up.clients[client] = true
-}
-
-func (up *UploadProgress) RemoveClient(client chan string) {
-	up.mu.Lock()
-	defer up.mu.Unlock()
-	delete(up.clients, client)
-}
-
-func (up *UploadProgress) UpdateProgress(progress int) {
-	up.mu.Lock()
-	defer up.mu.Unlock()
-
-	up.Progress = progress
-
-	for client := range up.clients {
-		client <- fmt.Sprintf("progress: %d%%", progress)
-	}
-}
 
 func main() {
 	ConfigRuntime()
