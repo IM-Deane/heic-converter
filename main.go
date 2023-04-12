@@ -68,7 +68,13 @@ func StartGin() {
 	if port == "" {
 		port = "8080"
 	}
-	if err := router.Run("localhost:" + port); err != nil {
+
+	host := "localhost:"
+	if envVariable("ENV") == "production" {
+		host = "0.0.0.0:"
+	}
+
+	if err := router.Run(host + port); err != nil {
         log.Panicf("error: %s", err)
 	}
 }
