@@ -8,6 +8,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"path/filepath"
+	"strconv"
 
 	"image/jpeg"
 	"image/png"
@@ -49,6 +50,7 @@ func processNonHEICImage(imageBytes []byte) (image.Image, error) {
 func processImage(
 	file *multipart.FileHeader,
 	convertToFormat string,
+	imageQuality string,
 	fileId string) ImageResult {
 	src, err := file.Open()
 	if err != nil {
@@ -108,13 +110,19 @@ func processImage(
 	}
 
 	encodedImageBytes := buf.Bytes()
+	imageQualityInt, _ := strconv.Atoi(imageQuality)
 
 	// Create options for the output image format
 	var outputOptions bimg.Options
 	if  convertToFormat == "png" {
-		outputOptions = bimg.Options{Type: bimg.PNG}
+		outputOptions = bimg.Options{Type: bimg.PNG, Quality: imageQualityInt, Lossless: true}
 	} else {
-		outputOptions = bimg.Options{Type: bimg.JPEG}
+		// if image quality is less than 75 we can use lossless compression
+		if imageQualityInt <= 75 {
+			outputOptions = bimg.Options{Type: bimg.JPEG, Quality: imageQualityInt, Lossless: true}
+		} else {
+			outputOptions = bimg.Options{Type: bimg.JPEG, Quality: imageQualityInt}
+		}
 	}
 
 	// Process the image
@@ -129,8 +137,6 @@ func processImage(
 	updateProgress(fileId, 90)
 
 	filename := removeFileExtension(file.Filename)
-
-	fmt.Println("Convert to PNG: %s", convertToFormat)
 
 	if  convertToFormat == "png" {
 		filename = fmt.Sprintf("%s.png", filename)

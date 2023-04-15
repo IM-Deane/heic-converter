@@ -61,6 +61,7 @@ func EventProgressGET(c *gin.Context) {
 
 func convertImagePOST(c *gin.Context) {
 	convertToPng := c.DefaultPostForm("convertToFormat", "jpeg")
+	imageQuality := c.DefaultPostForm("imageQuality", "100")
 	files := c.Request.MultipartForm.File["images"]
 	fileIds := c.PostFormArray("fileIds")
 
@@ -73,7 +74,7 @@ func convertImagePOST(c *gin.Context) {
 	for i, file := range files {
 		fileId := fileIds[i]
 		updateProgress(fileId, 0)
-		convertedImages[i] = processImage(file, convertToPng, fileId)
+		convertedImages[i] = processImage(file, convertToPng, imageQuality, fileId)
 	}
 
 	// round to 10 milliseconds (two decimal places)
